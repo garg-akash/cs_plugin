@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <groupId>cn.elibot.plugin.samples</groupId>
+    <artifactId>myDaemon</artifactId>
+    <version>1.2.3.0</version>
+
+    <name>EliRobot: Sample Plugin Daemon</name>
+    <packaging>bundle</packaging>
+
+    <properties>
+        <!--********************************************************************-->
+        <!--   Note: Update this section with relevant metadata                 -->
+        <!--       that comes along with your ELITECO Plugin                    -->
+        <!--********************************************************************-->
+
+        <!--***************** BEGINNING OF ELICO PLUGIN METADATA ***************-->
+        <plugin.symbolicname>${project.groupId}.${project.artifactId}</plugin.symbolicname>
+        <plugin.bundleActivator>cn.elibot.plugin.samples.daemon.Activator</plugin.bundleActivator>
+        <plugin.licenseType>Sample license</plugin.licenseType>
+        <plugin.licenseIcon/>
+        <plugin.iconURL/>
+        <plugin.smallIconURL/>
+        <plugin.description>Describe About Daemon Contribution</plugin.description>
+        <plugin.vendor>ELITE ROBOTS</plugin.vendor>
+        <plugin.contactAddress>Building 18, Lane 36, Xuelin Road, Pudong District, Shanghai</plugin.contactAddress>
+        <plugin.copyright>Copyright (C) ${copyright.year} ELITE ROBOTS. All Rights Reserved.</plugin.copyright>
+        <!--******************* END OF ELICO PLUGIN METADATA *******************-->
+
+        <api.version>1.2.3.0</api.version>
+
+        <!--Current year for the copyright-->
+        <copyright.year>${maven.build.timestamp}</copyright.year>
+        <maven.build.timestamp.format>yyyy</maven.build.timestamp.format>
+
+        <!--The host, username and password of the robot to be used during deployment  "mvn install -Pdeploy_remote" -->
+        <!--Change this "192.168.1.1" to the robot IP address when using-->
+        <elico.install.host>192.168.1.1</elico.install.host>
+        <elico.install.username>root</elico.install.username>
+        <elico.install.password>elibot</elico.install.password>
+
+        <!--Deploy to local environment  "mvn install -Pdeploy_local" -->
+        <!--Modify local emulation path when deploying to local "EliRobot.home.dir"-->
+        <elico.install.dir>EliRobot.home.dir</elico.install.dir>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>6.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.elibot</groupId>
+            <artifactId>elibot-plugin-api</artifactId>
+            <version>${api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.elibot</groupId>
+            <artifactId>elibot-lang</artifactId>
+            <version>${api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlrpc</groupId>
+            <artifactId>xmlrpc-client</artifactId>
+            <version>3.1.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>stringtemplate</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr-runtime</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.util</groupId>
+            <artifactId>ws-commons-util</artifactId>
+            <version>1.0.2</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xml-apis</artifactId>
+                    <groupId>xml-apis</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>4.2.0</version>
+                <extensions>true</extensions>
+                <inherited>true</inherited>
+                <executions>
+                    <execution>
+                        <id>bundle-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <instructions>
+                        <!--********** DO NOT MODIFY THE ENTRIES OF THIS SECTION **********-->
+                        <Bundle-Category>elibot.plug-in</Bundle-Category>
+                        <Bundle-Activator>${plugin.bundleActivator}</Bundle-Activator>
+                        <Bundle-Vendor>${plugin.vendor}</Bundle-Vendor>
+                        <Bundle-ContactAddress>${plugin.contactAddress}</Bundle-ContactAddress>
+                        <Bundle-Copyright>${plugin.copyright}</Bundle-Copyright>
+                        <Bundle-LicenseType>${plugin.licenseType}</Bundle-LicenseType>
+                        <Bundle-Description>${plugin.description}</Bundle-Description>
+                        <Bundle-IconURL>${plugin.iconURL}</Bundle-IconURL>
+                        <Bundle-SmallIconURL>${plugin.smallIconURL}</Bundle-SmallIconURL>
+                        <!--***************************************************************-->
+                        <Import-Package>
+                            cn.elibot.robot.*,
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>elico-copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <taskdef resource="net/sf/antcontrib/antlib.xml"
+                                         classpathref="maven.dependency.classpath"/>
+                                <if>
+                                    <available
+                                            file="target/${project.build.finalName}.jar"/>
+                                    <then>
+                                        <copy file="target/${project.build.finalName}.jar"
+                                              tofile="target/${project.build.finalName}.elico"/>
+                                    </then>
+                                </if>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>clean-daemon</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <taskdef resource="net/sf/antcontrib/antlib.xml"
+                                         classpathref="maven.dependency.classpath"/>
+                                <delete>
+                                    <!--suppress UnresolvedMavenProperty -->
+                                    <fileset
+                                            dir="src/main/resources/daemon/"
+                                            includes="HelloWorld"/>
+                                </delete>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.8</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>ant-contrib</groupId>
+                            <artifactId>ant-contrib</artifactId>
+                            <version>1.0b3</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>ant</groupId>
+                                    <artifactId>ant</artifactId>
+                                </exclusion>
+                            </exclusions>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.ant</groupId>
+                            <artifactId>ant-jsch</artifactId>
+                            <version>1.8.4</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>com.jcraft</groupId>
+                            <artifactId>jsch</artifactId>
+                            <version>0.1.53</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>only_linux</id>
+            <activation>
+                <os>
+                    <name>linux</name>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.1</version>
+                        <executions>
+                            <execution>
+                                <id>copy-daemon-src</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>cp</executable>
+                                    <commandlineArgs>-r daemon/ target/daemon</commandlineArgs>
+                                    <workingDirectory>.</workingDirectory>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>compile-daemon</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>scons</executable>
+                                    <arguments>
+                                        <argument>release=1</argument>
+                                    </arguments>
+                                    <workingDirectory>./target/daemon</workingDirectory>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>copy-daemon</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>cp</executable>
+                                    <commandlineArgs>target/daemon/HelloWorld src/main/resources/daemon/</commandlineArgs>
+                                    <workingDirectory>.</workingDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>deploy_remote</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>remote-install-elico</id>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+
+                                <phase>install</phase>
+                                <configuration>
+                                    <target>
+                                        <taskdef resource="net/sf/antcontrib/antlib.xml"
+                                                 classpathref="maven.dependency.classpath"/>
+                                        <echo message="Deploy elico ${plugin.symbolicname} to remote..."/>
+                                        <sshexec host="${elico.install.host}" username="${elico.install.username}"
+                                                 trust="yes"
+                                                 password="${elico.install.password}" failonerror="true"
+                                                 command="systemctl stop kiosk"/>
+
+                                        <scp trust="true"
+                                             failonerror="true"
+                                             file="${project.basedir}/target/${project.artifactId}-${project.version}.jar"
+                                             todir="${elico.install.username}:${elico.install.password}@${elico.install.host}:/home/elite/EliRobot/.plugins/${plugin.symbolicname}.jar"
+                                        />
+
+                                        <sshexec host="${elico.install.host}" username="${elico.install.username}"
+                                                 trust="yes"
+                                                 password="${elico.install.password}" failonerror="true"
+                                                 command="systemctl restart kiosk &amp;&amp; systemctl restart x11vnc"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>deploy_local</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>local-install-elico</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <taskdef resource="net/sf/antcontrib/antlib.xml"
+                                                 classpathref="maven.dependency.classpath"/>
+                                        <if>
+                                            <available
+                                                    file="${project.basedir}/target/${project.artifactId}-${project.version}.elico"/>
+                                            <then>
+                                                <!--suppress UnresolvedMavenProperty -->
+                                                <copy file="${project.basedir}/target/${project.artifactId}-${project.version}.elico"
+                                                      tofile="${elico.install.dir}/.plugins/${plugin.symbolicname}.jar"/>
+                                            </then>
+                                        </if>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

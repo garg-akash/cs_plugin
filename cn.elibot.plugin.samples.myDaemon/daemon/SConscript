@@ -1,0 +1,32 @@
+Import('env')
+
+HW_SOURCE = Split('''main.cpp
+                    xmlrpcserver.cpp
+                    webServer.cpp
+                    Data.cpp
+                    MyXmlRpcServerMethods.cpp
+                    ''')
+
+HW_CPPPATH = Split('''.
+                       ''')
+
+HW_LIBS = Split('''
+                   xmlrpc++
+                   stdc++
+                   xmlrpc_server_abyss++
+                   xmlrpc_server_abyss++
+                   m
+                   rt
+                   pthread
+                   ''')
+
+HW_CPPPATH.append(env['CPPPATH'])
+HW_LIBS.append(env['LIBS'])
+
+
+###############################################################################
+print("Building helloworld")
+env.Program(target='HelloWorld',
+            source=HW_SOURCE,
+            CPPPATH=HW_CPPPATH,
+            LIBS=HW_LIBS)

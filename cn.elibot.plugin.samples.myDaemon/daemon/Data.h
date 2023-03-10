@@ -11,6 +11,7 @@ class Data {
 
     void setMessage(string message);
     string getMessage() const;
+    void getMoveitTraj(string message);
 
   private:
     string message ;

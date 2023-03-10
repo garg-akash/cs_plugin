@@ -17,3 +17,7 @@ void Data::setMessage(string message) {
   this->message = message;
 }
 
+void Data::getMoveitTraj(string message) {
+  this->message = "get moveit traj";
+}
+

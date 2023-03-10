@@ -24,4 +24,13 @@ class GetMessage: public xmlrpc_c::method {
     Data* data;
 };
 
+class GetMoveitTraj: public xmlrpc_c::method {
+  public:
+    GetMoveitTraj(Data* data);
+    void execute(xmlrpc_c::paramList const& paramList, xmlrpc_c::value * const retvalP);
+  private:
+    GetMoveitTraj();
+    Data* data;
+};
+
 #endif // MyXMLRPCSEVERMETHODS_H

@@ -33,6 +33,13 @@ public class XmlRpcMyDaemonFacade {
         return processString(result);
     }
 
+    public String getMoveitTraj(String mes) throws XmlRpcException {
+        ArrayList<String> args = new ArrayList<String>();
+        args.add(mes);
+        Object result = client.execute("get_moveit_traj", args);
+        return processString(result);
+    }
+
     private String processString(Object response) {
         if (response instanceof String) {
             return (String) response;

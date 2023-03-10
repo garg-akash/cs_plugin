@@ -19,6 +19,7 @@ public class MyDaemonViewImpl implements NavbarContribution {
     private JButton startButton;
     private JButton stopButton;
     private JTextField textField;
+    private JButton moveitButton;
 
 
     public MyDaemonViewImpl(MyDaemonServiceImpl daemonService) {
@@ -37,6 +38,7 @@ public class MyDaemonViewImpl implements NavbarContribution {
         textField.setPreferredSize(new Dimension(200, 32));
         startButton = new JButton(ResourceSupport.getDefaultResourceBundle().getString("start_daemon"));
         stopButton = new JButton(ResourceSupport.getDefaultResourceBundle().getString("stop_daemon"));
+        moveitButton = new JButton("MoveIt Traj");
 
         textField.addMouseListener(new MouseAdapter() {
             @Override
@@ -58,11 +60,13 @@ public class MyDaemonViewImpl implements NavbarContribution {
 
         stopButton.addActionListener(e -> stopDaemon());
 
+        moveitButton.addActionListener(e -> moveitDaemon());
+
         addComponent(panel, label, 0, 0, 2, 1, 0.0D, 0.0D, 0, 0, 0, 0, 1, 10);
         addComponent(panel, textField, 0, 1, 2, 1, 0.0D, 0.0D, 20, 0, 0, 0, 1, 10);
         addComponent(panel, startButton, 0, 2, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
         addComponent(panel, stopButton, 1, 2, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 13);
-
+        addComponent(panel, moveitButton, 0, 3, 2, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
     }
 
     public static void addComponent(JPanel panel, Component c, int x, int y, int width, int height, double wx, double wy, int top, int left, int bottom, int right, int fill, int anchor) {
@@ -84,10 +88,12 @@ public class MyDaemonViewImpl implements NavbarContribution {
             startButton.setEnabled(false);
             stopButton.setEnabled(true);
             textField.setEnabled(true);
+            moveitButton.setEnabled(true);
         } else {
             startButton.setEnabled(true);
             stopButton.setEnabled(false);
             textField.setEnabled(false);
+            moveitButton.setEnabled(false);
         }
     }
 
@@ -101,6 +107,17 @@ public class MyDaemonViewImpl implements NavbarContribution {
         System.out.println("my daemon stop!");
         daemonService.getDaemon().stop();
         updateStatus();
+    }
+
+    public void moveitDaemon() {
+        System.out.println("my daemon MoveIt!");
+        try {
+            xmlRpcMyDaemonFacade.getMoveitTraj(textField.getText());
+        } catch (XmlRpcException ex) {
+            ex.printStackTrace();
+        }
+//        daemonService.getDaemon().start();
+//        updateStatus();
     }
 
     @Override

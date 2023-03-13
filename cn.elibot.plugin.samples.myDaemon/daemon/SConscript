@@ -1,10 +1,10 @@
 Import('env')
 
 HW_SOURCE = Split('''main.cpp
-                    xmlrpcserver.cpp
-                    webServer.cpp
-                    Data.cpp
-                    MyXmlRpcServerMethods.cpp
+                    src/xmlrpcserver.cpp
+                    src/webServer.cpp
+                    src/Data.cpp
+                    src/MyXmlRpcServerMethods.cpp
                     ''')
 
 HW_CPPPATH = Split('''.

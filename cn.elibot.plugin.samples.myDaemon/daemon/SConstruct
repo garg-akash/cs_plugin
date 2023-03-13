@@ -73,7 +73,7 @@ if devkit_prefix != '':
     env.Replace(LD = devkit_prefix + 'ld')
     env.Replace(OBJCOPY = devkit_prefix + 'objcopy')
 
-include_path = ['/usr/include']
+include_path = ['/usr/include','include']
 lib_path = ['/usr/lib']
 xmlrpc_LIBS = ['xmlrpc_server_abyss++', 'xmlrpc_server_abyss', 'xmlrpc_server_pstream++', 'xmlrpc_server',
 'xmlrpc_abyss', 'xmlrpc_server++', 'xmlrpc++', 'xmlrpc', 'xmlrpc_packetsocket', 'xmlrpc_xmlparse', 'xmlrpc_xmltok', 'xmlrpc_util','curl']

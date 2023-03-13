@@ -1,2 +1,3 @@
 cn.elibot.plugin.samples.myDaemon/target/
 cn.elibot.plugin.samples.myDaemon/daemon/build/
+cn.elibot.plugin.samples.myDaemon/daemon/devel/

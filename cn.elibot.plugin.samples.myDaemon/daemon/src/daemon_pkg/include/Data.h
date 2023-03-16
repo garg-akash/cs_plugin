@@ -2,11 +2,13 @@
 #define DATA_H
 
 #include <string>
+#include "ros/ros.h"
+#include <interpolation.h>
 
 using namespace std;
 class Data {
   public:
-    Data();
+    Data(ros::NodeHandle);
     ~Data();
 
     void setMessage(string message);
@@ -15,6 +17,8 @@ class Data {
 
   private:
     string message ;
+    ros::NodeHandle nh_;
+    Interpolation interObj;
 };
 
 #endif // DATA_H

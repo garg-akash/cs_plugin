@@ -2,13 +2,16 @@
 #include "xmlrpcserver.h"
 #include "Data.h"
 #include "webServer.h"
+#include "ros/ros.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
+    ros::init(argc, argv, "main_node");
+    ros::NodeHandle nh;
 
-    Data data;
+    Data data(nh);
 
     cout << data.getMessage() << endl;
     XmlRpcServer myServer(4444, &data);

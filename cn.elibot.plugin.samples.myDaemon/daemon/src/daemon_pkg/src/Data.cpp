@@ -2,7 +2,7 @@
 #include <sstream>
 
 
-Data::Data() : message("hello world!") {
+Data::Data(ros::NodeHandle nh) : message("hello world!"), nh_(nh) {
 }
 
 Data::~Data() {
@@ -19,5 +19,6 @@ void Data::setMessage(string message) {
 
 void Data::getMoveitTraj(string message) {
   this->message = "get moveit traj";
+  interObj.subscriberAndInterpolate(nh_);
 }
 

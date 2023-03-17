@@ -8,7 +8,7 @@
 using namespace std;
 class Data {
   public:
-    Data(ros::NodeHandle);
+    Data(ros::NodeHandle *nh, string s = "Hello World");
     ~Data();
 
     void setMessage(string message);
@@ -17,8 +17,8 @@ class Data {
 
   private:
     string message ;
-    ros::NodeHandle nh_;
-    Interpolation interObj;
+    ros::NodeHandle *nh_;
+    Interpolation *interObj;
 };
 
 #endif // DATA_H

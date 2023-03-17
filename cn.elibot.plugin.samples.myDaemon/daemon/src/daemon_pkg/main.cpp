@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     ros::init(argc, argv, "main_node");
     ros::NodeHandle nh;
 
-    Data data(nh);
+    Data data(& nh);
 
     cout << data.getMessage() << endl;
     XmlRpcServer myServer(4444, &data);
@@ -37,5 +37,6 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    ros::spin();
     return 0;
 }

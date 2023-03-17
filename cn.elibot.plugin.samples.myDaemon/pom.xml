@@ -329,7 +329,7 @@
                                 </goals>
                                 <configuration>
                                     <executable>cp</executable>
-                                    <commandlineArgs>target/daemon/devel/lib/daemon_pkg/HelloWorld src/main/resources/daemon/</commandlineArgs>
+                                    <commandlineArgs>./target/daemon/devel/lib/daemon_pkg/HelloWorld src/main/resources/daemon/</commandlineArgs>
                                     <workingDirectory>.</workingDirectory>
                                 </configuration>
                             </execution>

@@ -93,7 +93,7 @@ public class MyDaemonViewImpl implements NavbarContribution {
             startButton.setEnabled(true);
             stopButton.setEnabled(false);
             textField.setEnabled(false);
-            moveitButton.setEnabled(false);
+            moveitButton.setEnabled(true);
         }
     }
 

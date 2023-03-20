@@ -14,6 +14,7 @@ class Data {
     void setMessage(string message);
     string getMessage() const;
     void getMoveitTraj(string message);
+    void deployMoveitTraj(string message);
     void setSamplingTime(double);
 
   private:

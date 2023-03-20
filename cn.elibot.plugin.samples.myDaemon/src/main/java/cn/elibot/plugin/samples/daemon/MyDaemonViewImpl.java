@@ -27,6 +27,7 @@ public class MyDaemonViewImpl implements NavbarContribution {
     private JTextField textField;
     private JButton moveitButton;
     private JFormattedTextField textField_time;
+    private JButton deployTrajButton;
 
     public MyDaemonViewImpl(MyDaemonServiceImpl daemonService) {
         this.daemonService = daemonService;
@@ -44,7 +45,8 @@ public class MyDaemonViewImpl implements NavbarContribution {
         textField.setPreferredSize(new Dimension(200, 32));
         startButton = new JButton(ResourceSupport.getDefaultResourceBundle().getString("start_daemon"));
         stopButton = new JButton(ResourceSupport.getDefaultResourceBundle().getString("stop_daemon"));
-        moveitButton = new JButton("MoveIt Traj");
+        moveitButton = new JButton("Interpolate");
+        deployTrajButton = new JButton("Deploy");
 
         NumberFormat customFormat = NumberFormat.getNumberInstance();
         customFormat.setRoundingMode(RoundingMode.UNNECESSARY);
@@ -73,6 +75,7 @@ public class MyDaemonViewImpl implements NavbarContribution {
         stopButton.addActionListener(e -> stopDaemon());
 
         moveitButton.addActionListener(e -> moveitDaemon());
+        deployTrajButton.addActionListener(e -> deployTrajDaemon());
         textField_time.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -94,7 +97,8 @@ public class MyDaemonViewImpl implements NavbarContribution {
         addComponent(panel, textField_time, 0, 2, 2, 1, 0.0D, 0.0D, 20, 0, 0, 0, 1, 10);
         addComponent(panel, startButton, 0, 3, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
         addComponent(panel, stopButton, 1, 3, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 13);
-        addComponent(panel, moveitButton, 0, 4, 2, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
+        addComponent(panel, moveitButton, 0, 4, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
+        addComponent(panel, deployTrajButton, 1, 4, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
     }
 
     public static void addComponent(JPanel panel, Component c, int x, int y, int width, int height, double wx, double wy, int top, int left, int bottom, int right, int fill, int anchor) {
@@ -117,12 +121,14 @@ public class MyDaemonViewImpl implements NavbarContribution {
             stopButton.setEnabled(true);
             textField.setEnabled(true);
             moveitButton.setEnabled(true);
+            deployTrajButton.setEnabled(true);
             textField_time.setEnabled(true);
         } else {
             startButton.setEnabled(true);
             stopButton.setEnabled(false);
             textField.setEnabled(false);
             moveitButton.setEnabled(true);
+            deployTrajButton.setEnabled(true);
             textField_time.setEnabled(true);
         }
     }
@@ -148,6 +154,14 @@ public class MyDaemonViewImpl implements NavbarContribution {
         }
 //        daemonService.getDaemon().start();
 //        updateStatus();
+    }
+    public void deployTrajDaemon() {
+        System.out.println("my daemon Deploy!");
+        try {
+            xmlRpcMyDaemonFacade.deployMoveitTraj();
+        } catch (XmlRpcException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override

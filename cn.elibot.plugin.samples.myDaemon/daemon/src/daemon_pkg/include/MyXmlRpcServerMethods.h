@@ -33,6 +33,15 @@ class GetMoveitTraj: public xmlrpc_c::method {
     Data* data;
 };
 
+class DeployMoveitTraj: public xmlrpc_c::method {
+  public:
+    DeployMoveitTraj(Data* data);
+    void execute(xmlrpc_c::paramList const& paramList, xmlrpc_c::value * const retvalP);
+  private:
+    DeployMoveitTraj();
+    Data* data;
+};
+
 class SetSamplingTime: public xmlrpc_c::method {
   public:
     SetSamplingTime(Data* data);

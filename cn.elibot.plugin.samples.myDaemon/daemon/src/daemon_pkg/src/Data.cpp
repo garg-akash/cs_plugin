@@ -26,6 +26,10 @@ void Data::getMoveitTraj(string message) {
   interObj->subscriberAndInterpolate(this->message);
 }
 
+void Data::deployMoveitTraj(string message) {
+  // interObj->deployMoveitTraj();
+}
+
 void Data::setSamplingTime(double tm) {
   interObj->setSamplingTime(tm);;
 }

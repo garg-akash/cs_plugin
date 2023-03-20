@@ -39,6 +39,10 @@ public class XmlRpcMyDaemonFacade {
         Object result = client.execute("get_moveit_traj", args);
         return processString(result);
     }
+    public void deployMoveitTraj() throws XmlRpcException {
+        ArrayList<String> args = new ArrayList<String>();
+        Object result = client.execute("deploy_moveit_traj", args);
+    }
 
     public Double setSamplingTime(double sampling_time) throws XmlRpcException {
         ArrayList<Double> args = new ArrayList<Double>();

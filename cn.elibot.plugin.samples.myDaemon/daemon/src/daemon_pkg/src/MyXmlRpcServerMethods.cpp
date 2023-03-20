@@ -50,6 +50,23 @@ void GetMoveitTraj::execute(xmlrpc_c::paramList const &paramList, xmlrpc_c::valu
   *ret = xmlrpc_c::value_string(msg);
 }
 
+DeployMoveitTraj::DeployMoveitTraj(Data *_data) : data(_data)
+{
+  this->_signature = "s:s";
+}
+
+void DeployMoveitTraj::execute(xmlrpc_c::paramList const &paramList, xmlrpc_c::value *const ret)
+{
+  string const msg(paramList.getString(0));
+  paramList.verifyEnd(1);
+
+  data->deployMoveitTraj(msg);
+
+  cout << "xmlRpc call deploy_moveit_traj : " << msg << endl;
+
+  *ret = xmlrpc_c::value_string(msg);
+}
+
 SetSamplingTime::SetSamplingTime(Data *_data) : data(_data)
 {
   this->_signature = "s:s";

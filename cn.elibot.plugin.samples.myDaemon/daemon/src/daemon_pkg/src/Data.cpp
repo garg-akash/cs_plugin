@@ -21,7 +21,11 @@ void Data::setMessage(string message) {
 }
 
 void Data::getMoveitTraj(string message) {
-  this->message = "get moveit traj";
-  interObj->subscriberAndInterpolate();
+  // this->message = "get moveit traj";
+  interObj->setTrajectoryAcquiredFlag();
+  interObj->subscriberAndInterpolate(this->message);
 }
 
+void Data::setSamplingTime(double tm) {
+  interObj->setSamplingTime(tm);;
+}

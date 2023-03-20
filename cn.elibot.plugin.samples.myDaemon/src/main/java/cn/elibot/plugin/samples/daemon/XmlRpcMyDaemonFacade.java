@@ -40,11 +40,25 @@ public class XmlRpcMyDaemonFacade {
         return processString(result);
     }
 
+    public Double setSamplingTime(double sampling_time) throws XmlRpcException {
+        ArrayList<Double> args = new ArrayList<Double>();
+        args.add(sampling_time);
+        Object result = client.execute("set_sampling_time", args);
+        return processDouble(result);
+    }
+
     private String processString(Object response) {
         if (response instanceof String) {
             return (String) response;
         } else {
             return "";
+        }
+    }
+    private Double processDouble(Object response) {
+        if (response instanceof Double) {
+            return (Double) response;
+        } else {
+            return -1.0;
         }
     }
 }

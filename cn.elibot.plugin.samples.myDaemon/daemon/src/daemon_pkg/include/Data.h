@@ -8,12 +8,13 @@
 using namespace std;
 class Data {
   public:
-    Data(ros::NodeHandle *nh, string s = "Hello World");
+    Data(ros::NodeHandle *nh, string s = "/move_group/display_planned_path");
     ~Data();
 
     void setMessage(string message);
     string getMessage() const;
     void getMoveitTraj(string message);
+    void setSamplingTime(double);
 
   private:
     string message ;

@@ -4,6 +4,7 @@ Interpolation::Interpolation(ros::NodeHandle *nh, double sampling_time)
 {
   this->nh_ = nh;
   sampling_time_ = sampling_time;
+  trajectory_acquired_ = false;
 }
 
 Interpolation::~Interpolation()
@@ -20,6 +21,16 @@ double Interpolation::degToRad(const double val_deg)
 {
   double val_rad = val_deg * M_PI / 180;
   return val_rad; 
+}
+
+void Interpolation::setSamplingTime(double tm)
+{
+  sampling_time_ = tm;
+}
+
+void Interpolation::setTrajectoryAcquiredFlag()
+{
+  trajectory_acquired_ = false;
 }
 
 double Interpolation::pos_inter(double t, const std::vector<double>& a)
@@ -148,12 +159,17 @@ std::tuple<func_t, func_t> Interpolation::getInterpolationFunctions(const trajec
 }
 
 
-void Interpolation::subscriberAndInterpolate()
+void Interpolation::subscriberAndInterpolate(std::string moveit_path_rostopic)
 {
   std::cout << "Going to subscriber to topic\n";
-  ros::Subscriber traj_sub_ = nh_->subscribe("/move_group/display_planned_path", 100, &Interpolation::cbTrajInterpolation, this);
+  ros::Subscriber traj_sub_ = nh_->subscribe(moveit_path_rostopic, 100, &Interpolation::cbTrajInterpolation, this);
   std::cout << "After callback\n";
-  ros::spin();
+  ros::Rate r(10);
+  while (!trajectory_acquired_)
+  {
+    ros::spinOnce();
+    r.sleep();
+  }
 }
 
 void Interpolation::cbTrajInterpolation(const moveit_msgs::DisplayTrajectory::ConstPtr& msg)
@@ -223,5 +239,7 @@ void Interpolation::cbTrajInterpolation(const moveit_msgs::DisplayTrajectory::Co
       fb_.close();
       fb_vel_.close();
     }
+    std::cout << "___________All joints processed____________\n";      
+    trajectory_acquired_ = true;
   }
 }

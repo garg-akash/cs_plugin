@@ -49,3 +49,20 @@ void GetMoveitTraj::execute(xmlrpc_c::paramList const &paramList, xmlrpc_c::valu
 
   *ret = xmlrpc_c::value_string(msg);
 }
+
+SetSamplingTime::SetSamplingTime(Data *_data) : data(_data)
+{
+  this->_signature = "s:s";
+}
+
+void SetSamplingTime::execute(xmlrpc_c::paramList const &paramList, xmlrpc_c::value *const ret)
+{
+  double msg =  paramList.getDouble(0);
+  paramList.verifyEnd(1);
+
+  data->setSamplingTime(msg);
+
+  cout << "xmlRpc call set_sampling_time : " << msg << endl;
+
+  *ret = xmlrpc_c::value_double(msg);
+}

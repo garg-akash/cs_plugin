@@ -33,4 +33,13 @@ class GetMoveitTraj: public xmlrpc_c::method {
     Data* data;
 };
 
+class SetSamplingTime: public xmlrpc_c::method {
+  public:
+    SetSamplingTime(Data* data);
+    void execute(xmlrpc_c::paramList const& paramList, xmlrpc_c::value * const retvalP);
+  private:
+    SetSamplingTime();
+    Data* data;
+};
+
 #endif // MyXMLRPCSEVERMETHODS_H

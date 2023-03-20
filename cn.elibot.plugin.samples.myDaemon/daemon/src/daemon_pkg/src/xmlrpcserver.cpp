@@ -27,6 +27,7 @@ void XmlRpcServer::regester_xml_method()
     serviceRegistry.addMethod("get_message", new GetMessage(data));
     serviceRegistry.addMethod("set_message", new SetMessage(data));
     serviceRegistry.addMethod("get_moveit_traj", new GetMoveitTraj(data));
+    serviceRegistry.addMethod("set_sampling_time", new SetSamplingTime(data));
 }
  
 int XmlRpcServer::setupServer()

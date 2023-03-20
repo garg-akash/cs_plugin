@@ -8,9 +8,15 @@ import cn.elibot.robot.plugin.ui.model.BaseKeyboardCallback;
 import org.apache.xmlrpc.XmlRpcException;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 public class MyDaemonViewImpl implements NavbarContribution {
 
@@ -20,7 +26,7 @@ public class MyDaemonViewImpl implements NavbarContribution {
     private JButton stopButton;
     private JTextField textField;
     private JButton moveitButton;
-
+    private JFormattedTextField textField_time;
 
     public MyDaemonViewImpl(MyDaemonServiceImpl daemonService) {
         this.daemonService = daemonService;
@@ -34,11 +40,17 @@ public class MyDaemonViewImpl implements NavbarContribution {
         panel.setLayout(new GridBagLayout());
 
         JLabel label = new JLabel(ResourceSupport.getDefaultResourceBundle().getString("daemon_view"));
-        textField = new JTextField("Hello, world");
+        textField = new JTextField("/move_group/display_planned_path");
         textField.setPreferredSize(new Dimension(200, 32));
         startButton = new JButton(ResourceSupport.getDefaultResourceBundle().getString("start_daemon"));
         stopButton = new JButton(ResourceSupport.getDefaultResourceBundle().getString("stop_daemon"));
         moveitButton = new JButton("MoveIt Traj");
+
+        NumberFormat customFormat = NumberFormat.getNumberInstance();
+        customFormat.setRoundingMode(RoundingMode.UNNECESSARY);
+        customFormat.setMaximumFractionDigits(3);
+        textField_time = new JFormattedTextField(new NumberFormatter(customFormat));
+
 
         textField.addMouseListener(new MouseAdapter() {
             @Override
@@ -61,12 +73,28 @@ public class MyDaemonViewImpl implements NavbarContribution {
         stopButton.addActionListener(e -> stopDaemon());
 
         moveitButton.addActionListener(e -> moveitDaemon());
+        textField_time.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                SwingService.keyboardService.showNumberKeyboard(textField_time, 0.1, 0, 1, 2, new BaseKeyboardCallback() {
+                    @Override
+                    public void onOk(Object o) {
+                        try {
+                            xmlRpcMyDaemonFacade.setSamplingTime(Double.parseDouble(textField_time.getText()));
+                        } catch (XmlRpcException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
 
         addComponent(panel, label, 0, 0, 2, 1, 0.0D, 0.0D, 0, 0, 0, 0, 1, 10);
         addComponent(panel, textField, 0, 1, 2, 1, 0.0D, 0.0D, 20, 0, 0, 0, 1, 10);
-        addComponent(panel, startButton, 0, 2, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
-        addComponent(panel, stopButton, 1, 2, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 13);
-        addComponent(panel, moveitButton, 0, 3, 2, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
+        addComponent(panel, textField_time, 0, 2, 2, 1, 0.0D, 0.0D, 20, 0, 0, 0, 1, 10);
+        addComponent(panel, startButton, 0, 3, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
+        addComponent(panel, stopButton, 1, 3, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 13);
+        addComponent(panel, moveitButton, 0, 4, 2, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
     }
 
     public static void addComponent(JPanel panel, Component c, int x, int y, int width, int height, double wx, double wy, int top, int left, int bottom, int right, int fill, int anchor) {
@@ -89,11 +117,13 @@ public class MyDaemonViewImpl implements NavbarContribution {
             stopButton.setEnabled(true);
             textField.setEnabled(true);
             moveitButton.setEnabled(true);
+            textField_time.setEnabled(true);
         } else {
             startButton.setEnabled(true);
             stopButton.setEnabled(false);
             textField.setEnabled(false);
             moveitButton.setEnabled(true);
+            textField_time.setEnabled(true);
         }
     }
 

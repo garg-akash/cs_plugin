@@ -16,10 +16,11 @@ class Interpolation
 private:
   ros::NodeHandle *nh_;
   double sampling_time_;
+  bool trajectory_acquired_;
 public:
   Interpolation(ros::NodeHandle *nh, double sampling_time = 0.1);
   ~Interpolation();
-  void subscriberAndInterpolate();
+  void subscriberAndInterpolate(std::string);
   void cbTrajInterpolation(const moveit_msgs::DisplayTrajectory::ConstPtr& msg);
   std::tuple<func_t, func_t> getInterpolationFunctions(const trajectory_msgs::JointTrajectory& jt, int ind, double& total_time);
   double acc_inter_t(double t_request, std::map<double, func> acc_time_func);
@@ -32,6 +33,8 @@ public:
   double pos_inter(double t, const std::vector<double>& a);
   double degToRad(const double val_deg);
   double radToDeg(const double val_rad);
+  void setSamplingTime(double);
+  void setTrajectoryAcquiredFlag();
 };
 
 #endif // INTERPOLATION_H

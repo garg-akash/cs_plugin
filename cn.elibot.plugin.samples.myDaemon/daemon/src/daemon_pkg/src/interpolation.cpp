@@ -1,9 +1,13 @@
 #include <interpolation.h>
 
-Interpolation::Interpolation(ros::NodeHandle *nh, double sampling_time)
+#include <cs_ros/realtime_control_client.h>
+
+Interpolation::Interpolation(ros::NodeHandle *nh, double sampling_time, std::string hostip)
 {
   this->nh_ = nh;
   sampling_time_ = sampling_time;
+  total_time_ = 0;
+  hostip_ = hostip;
   trajectory_acquired_ = false;
 }
 
@@ -21,6 +25,17 @@ double Interpolation::degToRad(const double val_deg)
 {
   double val_rad = val_deg * M_PI / 180;
   return val_rad; 
+}
+
+std::vector<std::vector<double>> transpose(const std::vector<std::vector<double>> data) 
+{
+  std::vector<std::vector<double>> result(data[0].size(),
+                                        std::vector<double>(data.size()));
+  for (std::vector<double>::size_type i = 0; i < data[0].size(); i++) 
+      for (std::vector<double>::size_type j = 0; j < data.size(); j++) {
+          result[i][j] = data[j][i];
+      }
+  return result;
 }
 
 void Interpolation::setSamplingTime(double tm)
@@ -182,7 +197,6 @@ void Interpolation::cbTrajInterpolation(const moveit_msgs::DisplayTrajectory::Co
   for(int i = 0; i < msg->trajectory.size(); i++) // rn we have only one trajectory
   {
     func_t pos_t, vel_t, acc_t;
-    double total_time; // total time of trajecory
     for(int k = 0; k < num_joints; k++)
     {
       std::filebuf fb_;
@@ -223,9 +237,9 @@ void Interpolation::cbTrajInterpolation(const moveit_msgs::DisplayTrajectory::Co
 
       std::cout << "___________Processing joint : " << k << "____________\n";
       std::vector<double> jpos;
-      std::tie(pos_t, vel_t) = getInterpolationFunctions(msg->trajectory[i].joint_trajectory, k, total_time);
-      ROS_INFO("total time : [%f]", total_time);
-      int length = total_time / sampling_time_; // not always int??
+      std::tie(pos_t, vel_t) = getInterpolationFunctions(msg->trajectory[i].joint_trajectory, k, total_time_);
+      ROS_INFO("total time : [%f]", total_time_);
+      int length = total_time_ / sampling_time_; // not always int??
       for(int l = 0; l < length; l++)
       {
         double tm = l * sampling_time_;
@@ -233,13 +247,28 @@ void Interpolation::cbTrajInterpolation(const moveit_msgs::DisplayTrajectory::Co
         fs_ << tm << "\t" << jpos.back() << "\n";
         fs_vel_ << tm << "\t" << radToDeg(vel_t(tm)) << "\t" << radToDeg(vel_t(tm))/CS_JOINT_VELOCITY_LIMIT[k] << "\n";
       }
-      jpos.push_back(pos_t(total_time));
-      fs_ << total_time << "\t" << jpos.back() << "\n";
-      fs_vel_ << total_time << "\t" << radToDeg(vel_t(total_time)) << "\t" << radToDeg(vel_t(total_time))/CS_JOINT_VELOCITY_LIMIT[k] << "\n";
+      jpos.push_back(pos_t(total_time_));
+      fs_ << total_time_ << "\t" << jpos.back() << "\n";
+      fs_vel_ << total_time_ << "\t" << radToDeg(vel_t(total_time_)) << "\t" << radToDeg(vel_t(total_time_))/CS_JOINT_VELOCITY_LIMIT[k] << "\n";
       fb_.close();
       fb_vel_.close();
+      joints_pos_.push_back(jpos); //fill joint by joint
     }
     std::cout << "___________All joints processed____________\n";      
     trajectory_acquired_ = true;
   }
+}
+
+void Interpolation::deployMoveitTraj()
+{
+  if (joints_pos_.size() == 0)
+  {  
+    std::cerr << "Please perform interpolation before calling deploy\n";
+    return;
+  }
+  // joints_pos_ is joints X waypoints
+  std::vector<std::vector<double>> joints_pos_trans = transpose(joints_pos_);
+
+  RealTimeControlClient rc_client(nh_, hostip_, sampling_time_, total_time_, joints_pos_trans);
+  rc_client.callServiceServer();
 }

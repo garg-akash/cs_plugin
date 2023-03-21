@@ -98,7 +98,7 @@ public class MyDaemonViewImpl implements NavbarContribution {
         addComponent(panel, startButton, 0, 3, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
         addComponent(panel, stopButton, 1, 3, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 13);
         addComponent(panel, moveitButton, 0, 4, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
-        addComponent(panel, deployTrajButton, 1, 4, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
+        addComponent(panel, deployTrajButton, 1, 4, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 13);
     }
 
     public static void addComponent(JPanel panel, Component c, int x, int y, int width, int height, double wx, double wy, int top, int left, int bottom, int right, int fill, int anchor) {

@@ -23,6 +23,7 @@ catkin_package(
 
 include_directories(
 # include
+  /home/ak/cs_catkin_ws/src/cs_ros/include
   ${catkin_INCLUDE_DIRS}
 )
 

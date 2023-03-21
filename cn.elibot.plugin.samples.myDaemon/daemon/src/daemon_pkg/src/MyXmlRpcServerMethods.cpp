@@ -57,14 +57,14 @@ DeployMoveitTraj::DeployMoveitTraj(Data *_data) : data(_data)
 
 void DeployMoveitTraj::execute(xmlrpc_c::paramList const &paramList, xmlrpc_c::value *const ret)
 {
-  string const msg(paramList.getString(0));
-  paramList.verifyEnd(1);
+  // string const msg(paramList.getString(0));
+  // paramList.verifyEnd(1);
 
-  data->deployMoveitTraj(msg);
+  data->deployMoveitTraj();
 
-  cout << "xmlRpc call deploy_moveit_traj : " << msg << endl;
+  cout << "xmlRpc call deploy_moveit_traj" << endl;
 
-  *ret = xmlrpc_c::value_string(msg);
+  *ret = xmlrpc_c::value_string(""); //return empty string
 }
 
 SetSamplingTime::SetSamplingTime(Data *_data) : data(_data)

@@ -41,7 +41,7 @@ public class XmlRpcMyDaemonFacade {
     }
     public void deployMoveitTraj() throws XmlRpcException {
         ArrayList<String> args = new ArrayList<String>();
-        Object result = client.execute("deploy_moveit_traj", args);
+        client.execute("deploy_moveit_traj", args);
     }
 
     public Double setSamplingTime(double sampling_time) throws XmlRpcException {

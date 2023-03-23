@@ -15,28 +15,28 @@ Interpolation::~Interpolation()
 {
 }
 
-double Interpolation::radToDeg(const double val_rad)
-{
-  double val_deg = val_rad * 180 / M_PI;
-  return val_deg; 
-}
+// double Interpolation::radToDeg(const double val_rad)
+// {
+//   double val_deg = val_rad * 180 / M_PI;
+//   return val_deg; 
+// }
 
-double Interpolation::degToRad(const double val_deg)
-{
-  double val_rad = val_deg * M_PI / 180;
-  return val_rad; 
-}
+// double Interpolation::degToRad(const double val_deg)
+// {
+//   double val_rad = val_deg * M_PI / 180;
+//   return val_rad; 
+// }
 
-std::vector<std::vector<double>> transpose(const std::vector<std::vector<double>> data) 
-{
-  std::vector<std::vector<double>> result(data[0].size(),
-                                        std::vector<double>(data.size()));
-  for (std::vector<double>::size_type i = 0; i < data[0].size(); i++) 
-      for (std::vector<double>::size_type j = 0; j < data.size(); j++) {
-          result[i][j] = data[j][i];
-      }
-  return result;
-}
+// std::vector<std::vector<double>> Interpolation::transpose(const std::vector<std::vector<double>> data) 
+// {
+//   std::vector<std::vector<double>> result(data[0].size(),
+//                                         std::vector<double>(data.size()));
+//   for (std::vector<double>::size_type i = 0; i < data[0].size(); i++) 
+//       for (std::vector<double>::size_type j = 0; j < data.size(); j++) {
+//           result[i][j] = data[j][i];
+//       }
+//   return result;
+// }
 
 void Interpolation::setSamplingTime(double tm)
 {
@@ -245,11 +245,11 @@ void Interpolation::cbTrajInterpolation(const moveit_msgs::DisplayTrajectory::Co
         double tm = l * sampling_time_;
         jpos.push_back(pos_t(tm));
         fs_ << tm << "\t" << jpos.back() << "\n";
-        fs_vel_ << tm << "\t" << radToDeg(vel_t(tm)) << "\t" << radToDeg(vel_t(tm))/CS_JOINT_VELOCITY_LIMIT[k] << "\n";
+        // fs_vel_ << tm << "\t" << radToDeg(vel_t(tm)) << "\t" << radToDeg(vel_t(tm))/CS_JOINT_VELOCITY_LIMIT[k] << "\n";
       }
       jpos.push_back(pos_t(total_time_));
       fs_ << total_time_ << "\t" << jpos.back() << "\n";
-      fs_vel_ << total_time_ << "\t" << radToDeg(vel_t(total_time_)) << "\t" << radToDeg(vel_t(total_time_))/CS_JOINT_VELOCITY_LIMIT[k] << "\n";
+      // fs_vel_ << total_time_ << "\t" << radToDeg(vel_t(total_time_)) << "\t" << radToDeg(vel_t(total_time_))/CS_JOINT_VELOCITY_LIMIT[k] << "\n";
       fb_.close();
       fb_vel_.close();
       joints_pos_.push_back(jpos); //fill joint by joint
@@ -271,4 +271,9 @@ void Interpolation::deployMoveitTraj()
 
   RealTimeControlClient rc_client(nh_, hostip_, sampling_time_, total_time_, joints_pos_trans);
   rc_client.callServiceServer();
+}
+
+int main()
+{
+  return 0;
 }

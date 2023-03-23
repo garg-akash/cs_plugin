@@ -9,7 +9,8 @@
 typedef std::function<double(double)> func; // binding the second argument using placeholder
 typedef std::function<double(double)> func_t; // binding the second argument using placeholder
 
-const int CS_JOINT_VELOCITY_LIMIT[] = {30, 150, 180, 230, 230, 30}; // joint velocity limit for CS
+// already defined in realtime_control_client.h
+// const int CS_JOINT_VELOCITY_LIMIT[] = {30, 150, 180, 230, 230, 30}; // joint velocity limit for CS 
 
 class Interpolation
 {
@@ -34,9 +35,9 @@ public:
   double acc_inter(double t, const std::vector<double>& a);
   double vel_inter(double t, const std::vector<double>& a);
   double pos_inter(double t, const std::vector<double>& a);
-  double degToRad(const double val_deg);
-  double radToDeg(const double val_rad);
-  std::vector<std::vector<double>> transpose(const std::vector<std::vector<double>>);
+  // double degToRad(const double val_deg);
+  // double radToDeg(const double val_rad);
+  // std::vector<std::vector<double>> transpose(const std::vector<std::vector<double>>);
   void setSamplingTime(double);
   void setTrajectoryAcquiredFlag();
   void deployMoveitTraj();

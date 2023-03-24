@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(daemon_pkg)
 
+# set (CMAKE_CXX_STANDARD 11)
+
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  cs_ros
   cs_ros_msgs
   message_generation
   actionlib
@@ -16,16 +19,18 @@ catkin_package(
 #  LIBRARIES daemon_pkg
 #  CATKIN_DEPENDS roscpp rospy std_msgs
 #  CATKIN_DEPENDS actionlib actionlib_msgs
+#  CATKIN_DEPENDS cs_ros_msgs cs_ros
 #  DEPENDS system_lib
 #  DEPENDS cs_rtsi
 )
 
 include_directories(
   include
-  /home/ak/cs_catkin_ws/src/cs_ros_pkg/cs_ros/include
-  /home/ak/cs_catkin_ws/devel/include/
+  ../cs_ros_pkg/cs_ros/include
+  #  /home/ak/Desktop/CS_SIMULATOR_v2.3.0/SDK/samples/cn.elibot.plugin.samples.myDaemon/daemon/src/cs_ros_pkg/cs_ros/include
+  # /home/ak/cs_catkin_ws/src/cs_ros_pkg/cs_ros_msgs/include
+  # /home/ak/cs_catkin_ws/devel/include/
   ${catkin_INCLUDE_DIRS}
-  # ${cs_ros_msgs_INCLUDE_DIRS}
 )
 
 add_subdirectory(src)

@@ -301,7 +301,20 @@
                                 </goals>
                                 <configuration>
                                     <executable>cp</executable>
-                                    <commandlineArgs>-r daemon/src/ target/daemon/src/</commandlineArgs>
+                                    <commandlineArgs>-r daemon/src/* target/daemon/src/</commandlineArgs>
+                                    <workingDirectory>.</workingDirectory>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>remove-old-cmakelist.txt</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>rm</executable>
+                                    <commandlineArgs>-f CMakeLists.txt</commandlineArgs>
                                     <workingDirectory>.</workingDirectory>
                                 </configuration>
                             </execution>
@@ -314,6 +327,7 @@
                                 </goals>
                                 <configuration>
                                     <executable>catkin_make</executable>
+                                    <commandlineArgs>-j1</commandlineArgs>
                                     <arguments>
                                         <argument>release=1</argument>
                                     </arguments>

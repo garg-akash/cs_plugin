@@ -261,6 +261,11 @@ void Interpolation::cbTrajInterpolation(const moveit_msgs::DisplayTrajectory::Co
 
 void Interpolation::deployMoveitTraj()
 {
+  if (nh_ == nullptr)
+  {
+    std::cerr << "NodeHandle not initialized\n";
+    return;
+  }
   if (joints_pos_.size() == 0)
   {  
     std::cerr << "Please perform interpolation before calling deploy\n";
@@ -268,8 +273,9 @@ void Interpolation::deployMoveitTraj()
   }
   // joints_pos_ is joints X waypoints
   std::vector<std::vector<double>> joints_pos_trans = transpose(joints_pos_);
-
+  ROS_INFO("Ready to deploy trajectory (calling RC Client)");  
   RealTimeControlClient rc_client(nh_, hostip_, sampling_time_, total_time_, joints_pos_trans);
+  ROS_INFO("RC Client constructor involved successful!");
   rc_client.callServiceServer();
 }
 

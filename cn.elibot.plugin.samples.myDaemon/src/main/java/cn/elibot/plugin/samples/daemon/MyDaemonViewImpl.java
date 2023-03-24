@@ -6,10 +6,12 @@ import cn.elibot.robot.plugin.contribution.navbar.NavbarContribution;
 import cn.elibot.robot.plugin.ui.SwingService;
 import cn.elibot.robot.plugin.ui.model.BaseKeyboardCallback;
 import org.apache.xmlrpc.XmlRpcException;
+import sun.security.x509.IPAddressName;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -17,6 +19,7 @@ import java.awt.event.MouseEvent;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Locale;
 
 public class MyDaemonViewImpl implements NavbarContribution {
 
@@ -27,7 +30,9 @@ public class MyDaemonViewImpl implements NavbarContribution {
     private JTextField textField;
     private JButton moveitButton;
     private JFormattedTextField textField_time;
+    private JFormattedTextField textField_ip;
     private JButton deployTrajButton;
+    private MaskFormatter ipAddress;
 
     public MyDaemonViewImpl(MyDaemonServiceImpl daemonService) {
         this.daemonService = daemonService;
@@ -48,11 +53,20 @@ public class MyDaemonViewImpl implements NavbarContribution {
         moveitButton = new JButton("Interpolate");
         deployTrajButton = new JButton("Deploy");
 
-        NumberFormat customFormat = NumberFormat.getNumberInstance();
-        customFormat.setRoundingMode(RoundingMode.UNNECESSARY);
-        customFormat.setMaximumFractionDigits(3);
-        textField_time = new JFormattedTextField(new NumberFormatter(customFormat));
+//        NumberFormat customFormat = NumberFormat.getNumberInstance();
+//        customFormat.setRoundingMode(RoundingMode.UNNECESSARY);
+//        customFormat.setMaximumFractionDigits(3);
+//        textField_time = new JFormattedTextField(new NumberFormatter(customFormat));
+        DecimalFormat decimalFormat = new DecimalFormat("0.00E0");
+        textField_time = new JFormattedTextField(decimalFormat.getNumberInstance(Locale.getDefault()));
 
+//        DecimalFormat decimalFormatIP = new DecimalFormat("00E.00E.00E.00E");
+        try {
+            ipAddress = new MaskFormatter("###.###.###.###");
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+        textField_ip = new JFormattedTextField(ipAddress);
 
         textField.addMouseListener(new MouseAdapter() {
             @Override
@@ -79,7 +93,7 @@ public class MyDaemonViewImpl implements NavbarContribution {
         textField_time.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                SwingService.keyboardService.showNumberKeyboard(textField_time, 0.1, 0, 1, 2, new BaseKeyboardCallback() {
+                SwingService.keyboardService.showNumberKeyboard(textField_time, 0.004, 0, 1, 3, new BaseKeyboardCallback() {
                     @Override
                     public void onOk(Object o) {
                         try {
@@ -92,13 +106,30 @@ public class MyDaemonViewImpl implements NavbarContribution {
             }
         });
 
+        textField_ip.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                SwingService.keyboardService.showIpKeyboard(textField_ip, new BaseKeyboardCallback() {
+                    @Override
+                    public void onOk(Object value) {
+                        try {
+                            xmlRpcMyDaemonFacade.setIP(Double.parseDouble(textField_ip.getText()));
+                        } catch (XmlRpcException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+
         addComponent(panel, label, 0, 0, 2, 1, 0.0D, 0.0D, 0, 0, 0, 0, 1, 10);
-        addComponent(panel, textField, 0, 1, 2, 1, 0.0D, 0.0D, 20, 0, 0, 0, 1, 10);
-        addComponent(panel, textField_time, 0, 2, 2, 1, 0.0D, 0.0D, 20, 0, 0, 0, 1, 10);
-        addComponent(panel, startButton, 0, 3, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
-        addComponent(panel, stopButton, 1, 3, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 13);
-        addComponent(panel, moveitButton, 0, 4, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
-        addComponent(panel, deployTrajButton, 1, 4, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 13);
+        addComponent(panel, textField_ip, 0, 1, 2, 1, 0.0D, 0.0D, 20, 0, 0, 0, 1, 10);
+        addComponent(panel, textField, 0, 2, 2, 1, 0.0D, 0.0D, 20, 0, 0, 0, 1, 10);
+        addComponent(panel, textField_time, 0, 3, 2, 1, 0.0D, 0.0D, 20, 0, 0, 0, 1, 10);
+        addComponent(panel, startButton, 0, 4, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
+        addComponent(panel, stopButton, 1, 4, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 13);
+        addComponent(panel, moveitButton, 0, 5, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 17);
+        addComponent(panel, deployTrajButton, 1, 5, 1, 1, 0.0D, 0.0D, 20, 0, 0, 0, 3, 13);
     }
 
     public static void addComponent(JPanel panel, Component c, int x, int y, int width, int height, double wx, double wy, int top, int left, int bottom, int right, int fill, int anchor) {
@@ -123,6 +154,7 @@ public class MyDaemonViewImpl implements NavbarContribution {
             moveitButton.setEnabled(true);
             deployTrajButton.setEnabled(true);
             textField_time.setEnabled(true);
+            textField_ip.setEnabled(true);
         } else {
             startButton.setEnabled(true);
             stopButton.setEnabled(false);
@@ -130,6 +162,7 @@ public class MyDaemonViewImpl implements NavbarContribution {
             moveitButton.setEnabled(true);
             deployTrajButton.setEnabled(true);
             textField_time.setEnabled(true);
+            textField_ip.setEnabled(true);
         }
     }
 

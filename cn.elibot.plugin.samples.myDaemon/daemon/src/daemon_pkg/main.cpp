@@ -3,6 +3,7 @@
 #include "Data.h"
 #include "webServer.h"
 #include "ros/ros.h"
+#include <cs_ros/realtime_control_client.h>
 
 using namespace std;
 

@@ -22,7 +22,7 @@ private:
   bool trajectory_acquired_;
   std::vector<std::vector<double>> joints_pos_;
 public:
-  Interpolation(ros::NodeHandle *nh, double sampling_time = 0.1, std::string hostip = "192.168.133.133");
+  Interpolation(ros::NodeHandle *nh, double sampling_time = 0.004, std::string hostip = "192.168.133.133");
   ~Interpolation();
   void subscriberAndInterpolate(std::string);
   void cbTrajInterpolation(const moveit_msgs::DisplayTrajectory::ConstPtr& msg);

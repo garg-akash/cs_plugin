@@ -50,6 +50,14 @@ public class XmlRpcMyDaemonFacade {
         Object result = client.execute("set_sampling_time", args);
         return processDouble(result);
     }
+    public Double setIP(double ip) throws XmlRpcException {
+        System.out.println("my ip!");
+        System.out.println(ip);
+        ArrayList<Double> args = new ArrayList<Double>();
+//        args.add(ip);
+        Object result = client.execute("set_sampling_time", args);
+        return processDouble(result);
+    }
 
     private String processString(Object response) {
         if (response instanceof String) {

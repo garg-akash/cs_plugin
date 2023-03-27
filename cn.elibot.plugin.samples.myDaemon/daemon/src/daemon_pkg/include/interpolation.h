@@ -38,6 +38,7 @@ public:
   // double degToRad(const double val_deg);
   // double radToDeg(const double val_rad);
   // std::vector<std::vector<double>> transpose(const std::vector<std::vector<double>>);
+  void setIP(std::string);
   void setSamplingTime(double);
   void setTrajectoryAcquiredFlag();
   void deployMoveitTraj();

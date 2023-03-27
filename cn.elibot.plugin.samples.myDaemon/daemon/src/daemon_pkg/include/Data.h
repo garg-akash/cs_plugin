@@ -16,6 +16,7 @@ class Data {
     void getMoveitTraj(string message);
     void deployMoveitTraj();
     void setSamplingTime(double);
+    void setIP(string);
 
   private:
     string message ;

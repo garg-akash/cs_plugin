@@ -51,4 +51,13 @@ class SetSamplingTime: public xmlrpc_c::method {
     Data* data;
 };
 
+class SetIP: public xmlrpc_c::method {
+  public:
+    SetIP(Data* data);
+    void execute(xmlrpc_c::paramList const& paramList, xmlrpc_c::value * const retvalP);
+  private:
+    SetIP();
+    Data* data;
+};
+
 #endif // MyXMLRPCSEVERMETHODS_H

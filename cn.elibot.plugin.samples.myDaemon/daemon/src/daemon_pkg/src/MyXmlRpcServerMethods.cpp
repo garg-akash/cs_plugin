@@ -83,3 +83,20 @@ void SetSamplingTime::execute(xmlrpc_c::paramList const &paramList, xmlrpc_c::va
 
   *ret = xmlrpc_c::value_double(msg);
 }
+
+SetIP::SetIP(Data *_data) : data(_data)
+{
+  this->_signature = "s:s";
+}
+
+void SetIP::execute(xmlrpc_c::paramList const &paramList, xmlrpc_c::value *const ret)
+{
+  string const msg(paramList.getString(0));
+  paramList.verifyEnd(1);
+
+  data->setIP(msg);
+
+  cout << "xmlRpc call set_ip : " << msg << endl;
+
+  *ret = xmlrpc_c::value_string(msg);
+}

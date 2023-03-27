@@ -53,10 +53,6 @@ public class MyDaemonViewImpl implements NavbarContribution {
         moveitButton = new JButton("Interpolate");
         deployTrajButton = new JButton("Deploy");
 
-//        NumberFormat customFormat = NumberFormat.getNumberInstance();
-//        customFormat.setRoundingMode(RoundingMode.UNNECESSARY);
-//        customFormat.setMaximumFractionDigits(3);
-//        textField_time = new JFormattedTextField(new NumberFormatter(customFormat));
         DecimalFormat decimalFormat = new DecimalFormat("0.00E0");
         textField_time = new JFormattedTextField(decimalFormat.getNumberInstance(Locale.getDefault()));
 
@@ -113,7 +109,7 @@ public class MyDaemonViewImpl implements NavbarContribution {
                     @Override
                     public void onOk(Object value) {
                         try {
-                            xmlRpcMyDaemonFacade.setIP(Double.parseDouble(textField_ip.getText()));
+                            xmlRpcMyDaemonFacade.setIP((textField_ip.getText()).toString());
                         } catch (XmlRpcException ex) {
                             ex.printStackTrace();
                         }

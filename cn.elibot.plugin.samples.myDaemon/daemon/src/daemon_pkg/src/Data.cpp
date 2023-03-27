@@ -33,3 +33,7 @@ void Data::deployMoveitTraj() {
 void Data::setSamplingTime(double tm) {
   interObj->setSamplingTime(tm);;
 }
+
+void Data::setIP(string ip) {
+  interObj->setIP(ip);;
+}

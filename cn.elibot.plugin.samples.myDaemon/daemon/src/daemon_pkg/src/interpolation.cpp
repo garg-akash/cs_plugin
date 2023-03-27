@@ -38,6 +38,11 @@ Interpolation::~Interpolation()
 //   return result;
 // }
 
+void Interpolation::setIP(std::string ip)
+{
+  hostip_ = ip;
+}
+
 void Interpolation::setSamplingTime(double tm)
 {
   sampling_time_ = tm;
@@ -275,8 +280,9 @@ void Interpolation::deployMoveitTraj()
   std::vector<std::vector<double>> joints_pos_trans = transpose(joints_pos_);
   ROS_INFO("Ready to deploy trajectory (calling RC Client)");  
   RealTimeControlClient rc_client(nh_, hostip_, sampling_time_, total_time_, joints_pos_trans);
-  ROS_INFO("RC Client constructor involved successful!");
+  ROS_INFO("RC Client constructor invoked successfully!");
   rc_client.callServiceServer();
+  ROS_INFO("RC Client call service invoked successfully!");
 }
 
 int main()

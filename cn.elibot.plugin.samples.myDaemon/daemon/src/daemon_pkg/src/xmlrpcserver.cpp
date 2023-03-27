@@ -29,6 +29,7 @@ void XmlRpcServer::regester_xml_method()
     serviceRegistry.addMethod("get_moveit_traj", new GetMoveitTraj(data));
     serviceRegistry.addMethod("deploy_moveit_traj", new DeployMoveitTraj(data));
     serviceRegistry.addMethod("set_sampling_time", new SetSamplingTime(data));
+    serviceRegistry.addMethod("set_ip", new SetIP(data));
 }
  
 int XmlRpcServer::setupServer()
